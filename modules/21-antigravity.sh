@@ -14,10 +14,7 @@ banner "Install / repair Antigravity (agy)"
 
 require_root
 
-if ! termux_run "command -v curl" >/dev/null 2>&1; then
-  log_info "Installing curl in Termux..."
-  termux_run "pkg install -y curl"
-fi
+require_working_curl || exit 1
 
 log_info "Running wallentx Termux installer (Bionic bridge + TCMalloc 39-bit fix)..."
 termux_run "

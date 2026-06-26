@@ -72,10 +72,15 @@ detect_service_dir() {
 # Detect whether Termux is running on bare Bionic or whether an Alpine
 # proot-distro container is available. Output: "alpine" if Alpine present and
 # usable, otherwise "bionic".
+#
+# Note: we check for /etc/alpine-release (a plain file) rather than bin/sh
+# (a symlink to /bin/busybox that only resolves correctly inside the proot).
+# From outside the proot the symlink's target path doesn't exist, so -x
+# returns false even when Alpine is fully installed.
 detect_runtime_preference() {
   local termux_files=/data/data/com.termux/files
   local alpine_root=$termux_files/usr/var/lib/proot-distro/containers/alpine/rootfs
-  if [ -d "$alpine_root" ] && [ -x "$alpine_root/bin/sh" ]; then
+  if [ -f "$alpine_root/etc/alpine-release" ]; then
     echo alpine
   else
     echo bionic
@@ -136,6 +141,32 @@ confirm() {
   printf '%s' "$prompt"
   local ans; read -r ans
   case "$ans" in y|Y|yes|YES) return 0 ;; *) return 1 ;; esac
+}
+
+# Verify Termux's curl actually works (not just present-on-disk). Stale
+# package states are common after long gaps: libcurl's QUIC dependency
+# `libngtcp2_crypto_ossl.so` references symbols only present in newer
+# openssl, and curl refuses to link until both are updated together.
+#
+# Surfaces a clear instruction if broken. Returns non-zero so the calling
+# module can exit early.
+require_working_curl() {
+  if termux_run "curl --version >/dev/null 2>&1" 2>/dev/null; then
+    return 0
+  fi
+  log_err "Termux's curl is not working (broken package linkage)."
+  log_err ""
+  log_err "This usually means libcurl, libngtcp2, and openssl are out of sync."
+  log_err "Open Termux on the device and run:"
+  log_err ""
+  log_err "  pkg upgrade -y"
+  log_err ""
+  log_err "or, if pkg upgrade itself errors:"
+  log_err ""
+  log_err "  pkg install -y --reinstall libcurl libngtcp2 openssl ca-certificates curl"
+  log_err ""
+  log_err "Then come back and re-run this action."
+  return 1
 }
 
 # Constants

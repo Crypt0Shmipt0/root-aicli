@@ -50,10 +50,20 @@ log_info "Installed CLIs:"
 
 check_cli() {
   local name=$1 cmd=$2 path=$3
-  if [ -x "$path" ] || termux_run "command -v $cmd" >/dev/null 2>&1; then
+  local found=""
+  # Check the canonical absolute path first (file or symlink we expect)
+  if [ -e "$path" ]; then found="$path"
+  # Fall back to PATH lookup inside Termux env (including ~/.local/bin)
+  elif termux_run "PATH=\$HOME/.local/bin:\$HOME/.grok/bin:\$PATH command -v $cmd" >/dev/null 2>&1; then
+    found=$(termux_run "PATH=\$HOME/.local/bin:\$HOME/.grok/bin:\$PATH command -v $cmd" 2>/dev/null)
+  fi
+  if [ -n "$found" ]; then
+    # Get version, strip ANSI escapes and CR
     local ver
-    ver=$(termux_run "$cmd --version 2>&1 | head -1" 2>/dev/null || echo "?")
-    log_ok "  $name: $ver"
+    ver=$(termux_run "PATH=\$HOME/.local/bin:\$HOME/.grok/bin:\$PATH '$found' --version 2>/dev/null | head -1" 2>/dev/null \
+          | sed -E 's/\x1b\[[0-9;]*[a-zA-Z]//g' \
+          | tr -d '\r')
+    log_ok "  $name: ${ver:-installed (version unknown)}"
   else
     log_warn "  $name: not installed"
   fi
