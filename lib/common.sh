@@ -131,15 +131,24 @@ alpine_run() {
 # done under su, otherwise Termux can't read/exec what we put there.
 apply_termux_mls() {
   local target=$1
+  # Early exit if the path doesn't exist. `find` on a missing path returns 1,
+  # and `pipefail` propagates that out of the pipe and trips `set -e` even
+  # with a trailing `return 0`. Cleaner to skip the pipeline entirely.
+  [ -e "$target" ] || return 0
   local ctx
   ctx=$(detect_termux_mls_context 2>/dev/null) || return 0
   local termux_user
   termux_user=$(detect_termux_user 2>/dev/null)
   [ -n "$termux_user" ] || return 0
+  # `|| true` on each chown/chcon so a single failing file doesn't abort the
+  # parent module under `set -e`. Some files (broken symlinks, FUSE mounts)
+  # legitimately refuse chcon; we want best-effort relabeling, not all or
+  # nothing.
   find "$target" 2>/dev/null | while read -r f; do
-    chown -h "$termux_user:$termux_user" "$f" 2>/dev/null
-    chcon -h "$ctx" "$f" 2>/dev/null
-  done
+    chown -h "$termux_user:$termux_user" "$f" 2>/dev/null || true
+    chcon -h "$ctx" "$f" 2>/dev/null || true
+  done || true
+  return 0
 }
 
 # Confirm prompt (TOMER_TWEAKS_YES=1 / ROOT_AICLI_YES=1 auto-confirms)
