@@ -96,14 +96,22 @@ require_root() {
 
 # Run a command inside Termux (bare Bionic context) with full Termux env.
 # Used from outside Termux when we already have root (via the APK).
+#
+# We synthesize TERMUX_VERSION because installers like wallentx's agy gate on
+# its presence to detect "is this a real Termux session." The actual value
+# does not matter, only that it is non-empty. We probe Termux's package
+# manager for the real version and fall back to a default.
 termux_run() {
   local termux_files=/data/data/com.termux/files
   local cmd="$*"
+  local termux_version
+  termux_version=$(cat "$termux_files/usr/etc/termux-version" 2>/dev/null || echo "0.118.3")
   HOME=$termux_files/home \
   PREFIX=$termux_files/usr \
   TMPDIR=$termux_files/usr/tmp \
   PATH=$termux_files/usr/bin:$PATH \
   LD_LIBRARY_PATH=$termux_files/usr/lib \
+  TERMUX_VERSION=$termux_version \
   "$termux_files/usr/bin/bash" -c "$cmd"
 }
 
