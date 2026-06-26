@@ -8,6 +8,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write   # needed by softprops/action-gh-release to attach the APK
+
 jobs:
   build:
     runs-on: ubuntu-latest
