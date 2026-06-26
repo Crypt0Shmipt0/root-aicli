@@ -51,12 +51,14 @@ fi
 
 apply_termux_mls "$TERMUX_HOME/.grok"
 apply_termux_mls "$TERMUX_HOME/.local"
+apply_termux_mls "$TERMUX_PREFIX/bin"  # in case the Alpine dispatcher was just written
 
-if termux_run "command -v grok" >/dev/null 2>&1; then
-  log_ok "grok installed:"
-  termux_run "grok --version 2>&1 | head -1" || true
+# Grok installer places binary at ~/.grok/bin/grok
+if termux_run "test -x \$HOME/.grok/bin/grok" 2>/dev/null; then
+  log_ok "grok installed at ~/.grok/bin/grok"
+  termux_run "PATH=\$HOME/.grok/bin:\$HOME/.local/bin:\$PATH grok --version 2>&1 | head -1" || true
 else
-  log_warn "grok binary not on PATH after install. Check ~/.grok/bin/grok."
+  log_warn "grok binary missing at ~/.grok/bin/grok after install."
 fi
 
 echo

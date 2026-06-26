@@ -25,11 +25,11 @@ termux_run "
 # Re-apply MLS contexts to anything new under ~/.local
 apply_termux_mls "$TERMUX_HOME/.local"
 
-if termux_run "command -v agy" >/dev/null 2>&1; then
-  log_ok "agy installed:"
-  termux_run "agy --version" | head -1 || true
+if termux_run "test -x \$HOME/.local/bin/agy" 2>/dev/null; then
+  log_ok "agy installed at ~/.local/bin/agy"
+  termux_run "PATH=\$HOME/.local/bin:\$PATH agy --version 2>&1 | head -1" || true
 else
-  log_warn "agy binary not on PATH after install. Check ~/.local/bin/agy."
+  log_warn "agy binary missing at ~/.local/bin/agy after install."
 fi
 
 echo

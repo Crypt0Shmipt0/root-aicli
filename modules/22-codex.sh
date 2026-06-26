@@ -25,11 +25,18 @@ termux_run "
 apply_termux_mls "$TERMUX_HOME/.local"
 apply_termux_mls "$TERMUX_HOME/.codex"
 
-if termux_run "command -v codex" >/dev/null 2>&1; then
-  log_ok "codex installed:"
-  termux_run "codex --version 2>&1 | head -1" || true
+# Codex installer places the binary at ~/.local/bin/codex but only adds that
+# dir to PATH via ~/.profile. New shells don't pick it up. Check the file
+# directly + tell the user how to put it on PATH.
+if termux_run "test -x \$HOME/.local/bin/codex" 2>/dev/null; then
+  log_ok "codex installed at ~/.local/bin/codex"
+  termux_run "PATH=\$HOME/.local/bin:\$PATH codex --version 2>&1 | head -1" || true
+  if ! termux_run "echo \$PATH | tr ':' '\n' | grep -qx \$HOME/.local/bin"; then
+    log_warn "  ~/.local/bin is not on Termux PATH by default."
+    log_warn "  Add to your ~/.bashrc:  export PATH=\$HOME/.local/bin:\$PATH"
+  fi
 else
-  log_warn "codex binary not on PATH after install. Check ~/.local/bin/codex."
+  log_warn "codex binary missing at ~/.local/bin/codex after install."
 fi
 
 echo
