@@ -1,0 +1,24 @@
+# Build outputs
+android-app/build/
+android-app/gen/
+*.apk
+*.dex
+*.class
+*.jar
+*.keystore
+
+# Generated icons (re-generated on every build)
+android-app/res/mipmap-*/ic_launcher.png
+
+# OS junk
+.DS_Store
+.idea/
+*.iml
+
+# Secrets
+*.local
+*.env
+secrets/
+
+# Local override
+.local-overrides.sh

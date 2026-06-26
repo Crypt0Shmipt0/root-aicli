@@ -1,0 +1,1 @@
+One-tap installer for AI coding CLIs in Termux on rooted Android.

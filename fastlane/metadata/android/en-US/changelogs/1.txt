@@ -1,0 +1,9 @@
+Initial release.
+
+* Install / repair Claude Code (Anthropic), Antigravity (Google),
+  Codex (OpenAI), and Grok Build (xAI) on Termux.
+* Auto-detect bare Termux vs Alpine proot and pick the right install path
+  per CLI.
+* Permanent SELinux MLS persistence hook for Magisk / KernelSU / APatch.
+* No analytics, no network calls from the app itself, no bundled
+  third-party binaries.

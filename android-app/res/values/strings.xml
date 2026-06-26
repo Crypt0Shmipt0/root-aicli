@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Root.AICLI</string>
+    <string name="subtitle">AI coding CLIs for rooted Termux</string>
+    <string name="btn_status">Status</string>
+    <string name="btn_claude">Install Claude Code</string>
+    <string name="btn_agy">Install Antigravity</string>
+    <string name="btn_codex">Install Codex</string>
+    <string name="btn_grok">Install Grok</string>
+    <string name="btn_all">Install All</string>
+    <string name="btn_permanent">Permanent Fix</string>
+    <string name="btn_clear">Clear Log</string>
+    <string name="ready">Tap Status first to detect your environment.</string>
+</resources>

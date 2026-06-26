@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textColor="@color/text"
+        android:textSize="34sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle"
+        android:textColor="@color/text_dim"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_status"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_green"
+                android:text="@string/btn_status"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_claude"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_blue"
+                android:text="@string/btn_claude"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_agy"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_blue"
+                android:text="@string/btn_agy"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_codex"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_blue"
+                android:text="@string/btn_codex"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_grok"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_blue"
+                android:text="@string/btn_grok"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_all"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_warm"
+                android:text="@string/btn_all"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_permanent"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/btn_warm"
+                android:text="@string/btn_permanent"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Output"
+                    android:textColor="@color/text_dim"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btn_clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_clear"
+                    android:textColor="@color/text_dim"
+                    android:background="@android:color/transparent"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="240dp"
+                android:background="@drawable/card_bg"
+                android:padding="14dp">
+
+                <TextView
+                    android:id="@+id/output"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ready"
+                    android:textColor="@color/text"
+                    android:textSize="13sp"
+                    android:typeface="monospace" />
+            </ScrollView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

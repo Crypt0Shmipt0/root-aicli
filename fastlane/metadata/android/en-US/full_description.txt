@@ -1,0 +1,32 @@
+Root.AICLI is a tiny launcher that installs and repairs AI coding command-line
+clients inside Termux on rooted Android devices. It removes the manual shell
+wrangling that normally stands between you and a working <code>claude</code>,
+<code>codex</code>, <code>agy</code>, or <code>grok</code> CLI on your phone or
+handheld.
+
+Currently supported:
+
+* <b>Claude Code</b> (Anthropic) — auto-picks Alpine for current versions or
+  bare-Termux + pinned 2.1.112 for Bionic compatibility.
+* <b>Antigravity (agy)</b> (Google) — uses the wallentx Termux-native fork
+  with Bionic-glibc bridge and TCMalloc 39-bit-VA fix.
+* <b>OpenAI Codex CLI</b> — native arm64-musl binary, runs on bare Termux.
+* <b>xAI Grok Build CLI</b> — official installer with Alpine fallback if the
+  bare-Termux binary requires glibc.
+
+The app is intentionally minimal: six buttons, a live log pane, no menus, no
+analytics, no network calls of its own. Every action runs an open-source
+shell module under <code>~/root-aicli/modules/</code>.
+
+Requires:
+
+* Magisk, KernelSU, or APatch
+* Termux from F-Droid (NOT the Play Store build, which has incompatible
+  signatures)
+* Optional: Alpine via proot-distro for the latest Claude Code
+
+Root.AICLI does not redistribute any AI CLI binaries. It only orchestrates the
+official upstream installers from Anthropic, Google, OpenAI, and xAI. Each
+CLI is governed by its own vendor's terms.
+
+License: MIT. Source: https://github.com/Crypt0Shmipt0/root-aicli

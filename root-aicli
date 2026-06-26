@@ -1,0 +1,92 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+# Root.AICLI command-line dispatcher. Invoked both interactively (Termux shell)
+# and from the Android APK (via su -mm + bash).
+set -euo pipefail
+
+# Resolve symlinks so HERE points to the real install dir, not $PREFIX/bin.
+SELF=$(readlink -f "$0" 2>/dev/null || echo "$0")
+HERE=$(cd "$(dirname "$SELF")" && pwd)
+. "$HERE/lib/common.sh"
+
+run_module() {
+  local name=$1; shift
+  local path=$HERE/modules/$name
+  [ -f "$path" ] || die "module not found: $name"
+  # Always invoke modules via bash explicitly (the shebang chain breaks when
+  # we're called from outside a Termux session, e.g. from the APK).
+  bash "$path" "$@"
+}
+
+action=${1:-menu}
+
+case "$action" in
+  detect|status)   run_module 00-detect.sh ;;
+  claude)          run_module 20-claude.sh ;;
+  agy|antigravity) run_module 21-antigravity.sh ;;
+  codex)           run_module 22-codex.sh ;;
+  grok)            run_module 23-grok.sh ;;
+  selinux|permanent|persistence) run_module 50-persistence.sh ;;
+  all)
+    run_module 20-claude.sh
+    run_module 21-antigravity.sh
+    run_module 22-codex.sh
+    run_module 23-grok.sh
+    run_module 50-persistence.sh
+    run_module 00-detect.sh
+    ;;
+  menu|"")
+    while true; do
+      banner "Root.AICLI - AI CLI installer for rooted Android"
+      cat <<EOF
+  1) status      check what's installed
+  2) claude      install / repair Claude Code (Anthropic)
+  3) agy         install / repair Antigravity (Google)
+  4) codex       install / repair Codex CLI (OpenAI)
+  5) grok        install / repair Grok Build CLI (xAI)
+  6) permanent   apply boot-time persistence (recommended)
+  7) all         install everything in sequence
+  q) quit
+EOF
+      printf "> "
+      read -r choice
+      case "$choice" in
+        1) run_module 00-detect.sh ;;
+        2) run_module 20-claude.sh ;;
+        3) run_module 21-antigravity.sh ;;
+        4) run_module 22-codex.sh ;;
+        5) run_module 23-grok.sh ;;
+        6) run_module 50-persistence.sh ;;
+        7) for m in 20-claude.sh 21-antigravity.sh 22-codex.sh 23-grok.sh 50-persistence.sh 00-detect.sh; do
+             run_module "$m"
+           done ;;
+        q|Q) break ;;
+        *) log_warn "unknown choice: $choice" ;;
+      esac
+      echo
+      printf "press enter to return to menu... "
+      read -r _
+    done
+    ;;
+  -h|--help|help)
+    cat <<EOF
+Root.AICLI - One-tap installer for AI coding CLIs on rooted Android Termux.
+
+Usage: root-aicli [action]
+
+Actions:
+  status / detect    Pre-flight: Termux, root, Alpine, installed CLIs.
+  claude             Install or repair Anthropic Claude Code.
+  agy / antigravity  Install or repair Google Antigravity (agy).
+  codex              Install or repair OpenAI Codex CLI.
+  grok               Install or repair xAI Grok Build CLI.
+  permanent          Install boot-time persistence (run once after setup).
+  all                Install everything in sequence.
+  (no arg)           Interactive menu.
+
+Env:
+  ROOT_AICLI_YES=1   Auto-confirm prompts.
+  NO_COLOR=1         Disable ANSI colors.
+EOF
+    ;;
+  *) die "unknown action: $action. Use 'root-aicli help' for the list." ;;
+esac
