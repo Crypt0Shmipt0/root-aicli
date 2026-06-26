@@ -1,5 +1,12 @@
 # Root.AICLI
 
+[![Build APK](https://github.com/Crypt0Shmipt0/root-aicli/actions/workflows/build.yml/badge.svg)](https://github.com/Crypt0Shmipt0/root-aicli/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Latest Release](https://img.shields.io/github/v/release/Crypt0Shmipt0/root-aicli?include_prereleases&sort=semver)](https://github.com/Crypt0Shmipt0/root-aicli/releases/latest)
+[![APK Size](https://img.shields.io/badge/apk-25KB-brightgreen)](https://github.com/Crypt0Shmipt0/root-aicli/releases/latest)
+[![Android](https://img.shields.io/badge/android-8.0%2B-3DDC84?logo=android&logoColor=white)](./docs/COMPATIBILITY.md)
+[![No telemetry](https://img.shields.io/badge/telemetry-none-success)](./SECURITY.md)
+
 > One-tap installer for AI coding CLIs on rooted Android Termux.
 
 Root.AICLI is a small Android app that installs and repairs the major AI
@@ -118,6 +125,23 @@ cd android-app
 ```
 
 CI does the same thing reproducibly. See `.github/workflows/build.yml`.
+
+## Documentation
+
+| Doc | Read this when |
+|---|---|
+| **[Quickstart](./docs/QUICKSTART.md)** | You just want it working in 5 minutes |
+| **[Installation](./docs/INSTALLATION.md)** | You need detailed install steps for any path (APK, F-Droid, source) |
+| **[CLI Reference](./docs/CLI-REFERENCE.md)** | You need per-CLI auth + first-run guidance |
+| **[FAQ](./docs/FAQ.md)** | You have a question; check here before opening an issue |
+| **[Troubleshooting](./docs/TROUBLESHOOTING.md)** | Something is not working |
+| **[Known Issues](./docs/KNOWN-ISSUES.md)** | Confirmed quirks we have not fixed yet |
+| **[Compatibility](./docs/COMPATIBILITY.md)** | Which Android versions / root managers / devices are tested |
+| **[Architecture](./docs/ARCHITECTURE.md)** | You want to understand how it works under the hood |
+| **[Contributing](./docs/CONTRIBUTING.md)** | You want to add a CLI or fix a bug |
+| **[Changelog](./CHANGELOG.md)** | What changed between versions |
+| **[Security](./SECURITY.md)** | Threat model and vulnerability disclosure |
+| **[Code of Conduct](./CODE_OF_CONDUCT.md)** | Community standards |
 
 ## License
 

@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: FAQ
+    url: https://github.com/Crypt0Shmipt0/root-aicli/blob/main/docs/FAQ.md
+    about: Common questions answered before you file an issue
+  - name: Troubleshooting guide
+    url: https://github.com/Crypt0Shmipt0/root-aicli/blob/main/docs/TROUBLESHOOTING.md
+    about: Common failure modes and their fixes
+  - name: Known issues
+    url: https://github.com/Crypt0Shmipt0/root-aicli/blob/main/docs/KNOWN-ISSUES.md
+    about: Things we know about, check here before reporting
