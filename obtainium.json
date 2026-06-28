@@ -1,0 +1,9 @@
+{
+  "id": "dev.rootaicli",
+  "url": "https://github.com/Crypt0Shmipt0/root-aicli",
+  "author": "Crypt0Shmipt0",
+  "name": "Root.AICLI",
+  "preferredApkIndex": 0,
+  "additionalSettings": "{\"includePrereleases\":false,\"fallbackToOlderReleases\":true,\"filterReleaseTitlesByRegEx\":\"\",\"filterReleaseNotesByRegEx\":\"\",\"verifyLatestTag\":false,\"dontSortReleasesList\":false,\"useLatestAssetDateAsReleaseDate\":false,\"trackOnly\":false,\"versionExtractionRegEx\":\"\",\"matchGroupToUse\":\"\",\"versionDetection\":true,\"releaseDateAsVersion\":false,\"useVersionCodeAsOSVersion\":false,\"apkFilterRegEx\":\"RootAICLI.*\\\\.apk\",\"invertAPKFilter\":false,\"autoApkFilterByArch\":true,\"appName\":\"Root.AICLI\",\"shizukuPretendToBeGooglePlay\":false,\"exemptFromBackgroundUpdates\":false,\"skipUpdateNotifications\":false,\"about\":\"One-tap installer for Claude Code, Antigravity, Codex, and Grok CLIs in Termux on rooted Android.\"}",
+  "overrideSource": null
+}
