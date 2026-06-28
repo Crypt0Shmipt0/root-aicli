@@ -9,6 +9,15 @@
 
 > One-tap installer for AI coding CLIs on rooted Android Termux.
 
+## Install
+
+| Channel | Status |
+|---|---|
+| [GitHub Releases (direct sideload)](https://github.com/Crypt0Shmipt0/root-aicli/releases/latest) | ✅ live |
+| [Obtainium](https://github.com/ImranR98/Obtainium) — add `https://github.com/Crypt0Shmipt0/root-aicli` as a source | ✅ live |
+| IzzyOnDroid third-party F-Droid repo | 🟡 submission pending |
+| F-Droid main | 🟡 submission pending ([!41552](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/41552)) |
+
 Root.AICLI is a small Android app that installs and repairs the major AI
 coding command-line clients inside Termux on rooted devices, with no manual
 shell wrangling. It auto-detects your environment, picks the right install
