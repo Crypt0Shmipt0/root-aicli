@@ -1,0 +1,64 @@
+# F-Droid build metadata for Root.AICLI.
+#
+# How to submit this:
+#
+# 1. Fork https://gitlab.com/fdroid/fdroiddata on GitLab.
+# 2. Clone your fork locally.
+# 3. Copy THIS file to `metadata/dev.rootaicli.yml` in your fork.
+# 4. Run `fdroid readmeta` to sanity-check syntax.
+# 5. Run `fdroid rewritemeta dev.rootaicli` to normalize formatting.
+# 6. Try a local build: `fdroid build dev.rootaicli:0.1.0`
+#    (Requires Docker; F-Droid's build sandbox is documented at
+#    https://f-droid.org/docs/Build_Server_Setup/.)
+# 7. Commit + push to your fork, then open a Merge Request against
+#    `fdroid/fdroiddata` master.
+#
+# F-Droid's review typically takes 2 to 6 weeks. Reviewer comments are common
+# even for well-formed metadata; address them in the MR and they will
+# re-review.
+
+Categories:
+  - Development
+  - System
+
+License: MIT
+
+AuthorName: Crypt0Shmipt0
+AuthorWebSite: https://github.com/Crypt0Shmipt0
+
+WebSite: https://github.com/Crypt0Shmipt0/root-aicli
+SourceCode: https://github.com/Crypt0Shmipt0/root-aicli
+IssueTracker: https://github.com/Crypt0Shmipt0/root-aicli/issues
+Changelog: https://github.com/Crypt0Shmipt0/root-aicli/blob/HEAD/CHANGELOG.md
+
+AutoName: Root.AICLI
+
+# Required reading: https://f-droid.org/docs/Build_Metadata_Reference/
+# Builds section: each Versions tag maps to one tagged release.
+Builds:
+  - versionName: 0.1.0
+    versionCode: 1
+    commit: v0.1.0
+    subdir: android-app
+    sudo:
+      - apt-get update
+      - apt-get install -y openjdk-17-jdk python3-pip wget unzip
+      - pip3 install Pillow
+    init:
+      - export ANDROID_HOME=$$SDK$$
+      - export PATH=$$SDK$$/cmdline-tools/latest/bin:$$SDK$$/platform-tools:$$PATH$$
+      - yes | sdkmanager --licenses > /dev/null 2>&1 || true
+      - sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null 2>&1 || true
+    build:
+      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - export ANDROID_HOME=$$SDK$$
+      - export PATH=$JAVA_HOME/bin:$$SDK$$/cmdline-tools/latest/bin:$$SDK$$/platform-tools:$$PATH$$
+      - ./build.sh
+    output: build/RootAICLI.apk
+
+# Manual versions — when we tag a new release, append a new Builds entry
+# above and bump AutoUpdateMode below to fetch the new tag.
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.0
+CurrentVersionCode: 1
