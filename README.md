@@ -46,6 +46,9 @@ Linux. Termux on Android is not normal:
   installer scripts can't see Termux's filesystem unless invoked with `su -mm`.
 - Each CLI vendor solves "Android arm64" differently: some ship musl, some
   ship glibc, some hand it to community forks.
+- A native `claude` **self-update recreates `~/.local/bin/claude`**, which sits
+  ahead of `$PREFIX/bin` in PATH and shadows the Alpine dispatcher — so `claude`
+  silently breaks while every other CLI keeps working.
 
 Root.AICLI handles all of this. You tap a button, it figures out which path
 applies to your device, and runs the right install.
@@ -69,8 +72,9 @@ applies to your device, and runs the right install.
 4. Tap **Status** to see what's installed.
 5. Tap any CLI button to install it. Wait for `[exit 0]`.
 6. Tap **Permanent Fix** once to install the boot-time persistence hook.
-   This re-applies Termux SELinux contexts on every boot so auto-updates
-   don't break Termux exec.
+   This re-applies Termux SELinux contexts on every boot **and reasserts the
+   Claude dispatcher on all entry points (boot + each login shell)** so CLI
+   auto-updates can't break Termux exec or shadow `claude`.
 7. Open Termux and run the CLI (e.g. `claude`, `codex`, `agy`, `grok`).
    Authenticate per the prompts shown in the app.
 

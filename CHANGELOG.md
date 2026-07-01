@@ -6,6 +6,8 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-01
+
 ### Fixed
 - **Claude dispatcher shadow.** A native `claude` self-update (or a bare-Termux
   install) drops a `~/.local/bin/claude` that sits ahead of `$PREFIX/bin` in
