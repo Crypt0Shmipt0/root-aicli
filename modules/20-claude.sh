@@ -41,17 +41,12 @@ if [ "$PREF" = "alpine" ]; then
   "
 
   # --- Termux dispatcher so 'claude' in Termux forwards into Alpine ----------
-  DISPATCHER=$TERMUX_PREFIX/bin/claude
-  if [ ! -x "$DISPATCHER" ]; then
-    log_info "Writing Termux -> Alpine dispatcher at $DISPATCHER"
-    cat > "$DISPATCHER" <<'EOF'
-#!/data/data/com.termux/files/usr/bin/env bash
-# Dispatcher installed by Root.AICLI: forwards `claude ...` into the
-# Alpine proot-distro container where the actual Claude binary lives.
-exec proot-distro login alpine --shared-tmp -- claude "$@"
-EOF
-    chmod 755 "$DISPATCHER"
-  fi
+  # Write the dispatcher to EVERY entry point a native `claude` install can
+  # occupy (~/.local/bin, ~/bin, $PREFIX/bin) so it can't be shadowed in PATH,
+  # plus a login-shell guard that reasserts it after a `claude` self-update.
+  log_info "Installing Termux -> Alpine dispatcher (all entry points + session guard)"
+  install_claude_dispatcher
+  install_claude_session_guard
 else
   # --- Path B: bare Termux Bionic (Claude 2.1.112 pin) -----------------------
   log_info "Bare Termux Bionic: pinning Claude Code to v2.1.112 (last Bionic-compatible)."

@@ -6,6 +6,16 @@ follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+- **Claude dispatcher shadow.** A native `claude` self-update (or a bare-Termux
+  install) drops a `~/.local/bin/claude` that sits ahead of `$PREFIX/bin` in
+  PATH and silently shadows the Alpine dispatcher, so `claude` breaks while
+  every other CLI keeps working. The dispatcher is now written to all three
+  entry points (`~/.local/bin`, `~/bin`, `$PREFIX/bin`), kept as a canonical
+  copy under `$PREFIX/libexec/root-aicli/`, reasserted on every boot by the
+  persistence hook, and healed on each login shell by a new
+  `etc/profile.d/root-aicli-claude.sh` guard (zero-gap).
+
 ## [0.1.0] - 2026-06-26
 
 ### Added
