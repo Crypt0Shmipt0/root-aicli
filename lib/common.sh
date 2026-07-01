@@ -190,3 +190,69 @@ require_working_curl() {
 export TERMUX_HOME="${HOME:-/data/data/com.termux/files/home}"
 export TERMUX_PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
 export ALPINE_ROOTFS="$TERMUX_PREFIX/var/lib/proot-distro/containers/alpine/rootfs"
+
+# --- Claude dispatcher (Alpine mode) -----------------------------------------
+#
+# In Alpine mode the real Claude binary lives inside the proot-distro Alpine
+# container; a thin Termux dispatcher forwards `claude ...` into it. The catch:
+# a native `claude` self-update (or a bare-Termux install) drops a
+# ~/.local/bin/claude that sits AHEAD of $PREFIX/bin in PATH and silently
+# shadows the dispatcher, so `claude` breaks while every other CLI still works.
+# We defend by writing the dispatcher to every entry point a native install can
+# occupy, keeping a canonical copy, and reasserting via a login-shell guard
+# (this file) + the boot hook (modules/50-persistence.sh).
+
+# Path to the canonical dispatcher copy the boot hook restores from.
+export CLAUDE_DISPATCHER_CANON="$TERMUX_PREFIX/libexec/root-aicli/claude-dispatcher"
+
+# Emit the dispatcher script body on stdout (single source of truth).
+claude_dispatcher_body() {
+  cat <<'EOF'
+#!/data/data/com.termux/files/usr/bin/env bash
+# Dispatcher installed by Root.AICLI: forwards `claude ...` into the Alpine
+# proot-distro container where the actual Claude binary lives.
+exec proot-distro login alpine --shared-tmp -- claude "$@"
+EOF
+}
+
+# Install the dispatcher to all three PATH entry points a native `claude`
+# install can occupy (~/.local/bin, ~/bin, $PREFIX/bin), removing any native
+# shadow, keep a canonical copy, and re-apply Termux MLS. Alpine mode only.
+install_claude_dispatcher() {
+  local p
+  mkdir -p "$(dirname "$CLAUDE_DISPATCHER_CANON")"
+  claude_dispatcher_body > "$CLAUDE_DISPATCHER_CANON"
+  chmod 755 "$CLAUDE_DISPATCHER_CANON"
+  for p in "$TERMUX_HOME/.local/bin/claude" "$TERMUX_HOME/bin/claude" "$TERMUX_PREFIX/bin/claude"; do
+    mkdir -p "$(dirname "$p")"
+    rm -f "$p"
+    cp "$CLAUDE_DISPATCHER_CANON" "$p"
+    chmod 755 "$p"
+    apply_termux_mls "$p"
+  done
+  apply_termux_mls "$CLAUDE_DISPATCHER_CANON"
+}
+
+# Drop a login-shell guard (sourced from $PREFIX/etc/profile.d) that reasserts
+# the dispatcher if a `claude` self-update recreated a native ~/.local/bin/claude
+# shadow since the last boot. Runs as the Termux user, so the rewritten file
+# inherits the correct SELinux context with no chcon needed. Zero-gap: heals on
+# the next terminal open, not just on reboot.
+install_claude_session_guard() {
+  local guard="$TERMUX_PREFIX/etc/profile.d/root-aicli-claude.sh"
+  mkdir -p "$TERMUX_PREFIX/etc/profile.d"
+  cat > "$guard" <<'EOF'
+# Root.AICLI: keep `claude` routed through the Alpine dispatcher. A native
+# `claude` self-update recreates ~/.local/bin/claude and shadows the dispatcher
+# in PATH; reassert it on each login shell.
+_rc="$HOME/.local/bin/claude"
+if [ -e "$_rc" ] && ! grep -q 'proot-distro login alpine' "$_rc" 2>/dev/null; then
+  rm -f "$_rc"
+  printf '#!/data/data/com.termux/files/usr/bin/env bash\nexec proot-distro login alpine --shared-tmp -- claude "$@"\n' > "$_rc"
+  chmod 755 "$_rc"
+fi
+unset _rc
+EOF
+  chmod 644 "$guard"
+  apply_termux_mls "$guard"
+}

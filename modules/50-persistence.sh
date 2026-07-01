@@ -71,6 +71,25 @@ for tree in \$TERMUX/usr/lib \$TERMUX/usr/bin \$TERMUX/usr/libexec \
 done
 EOF
 
+# Alpine mode: also reassert the Termux -> Alpine claude dispatcher on every
+# boot so a native `claude` self-update can't shadow it in PATH (20-claude.sh).
+if [ "$(detect_runtime_preference)" = "alpine" ]; then
+  log_info "Alpine mode: boot hook will also reassert the claude dispatcher"
+  cat >> "$HOOK" <<'HOOKX'
+
+# --- claude dispatcher reassert (Root.AICLI, alpine mode) ---
+CANON=$TERMUX/usr/libexec/root-aicli/claude-dispatcher
+if [ -f "$CANON" ]; then
+  for p in "$TERMUX/home/.local/bin/claude" "$TERMUX/home/bin/claude" "$TERMUX/usr/bin/claude"; do
+    d=$(dirname "$p"); [ -d "$d" ] || mkdir -p "$d"
+    rm -f "$p"; cp "$CANON" "$p"; chmod 755 "$p"
+    chown "$TERMUX_USER":"$TERMUX_USER" "$p" 2>/dev/null
+    chcon "$CTX" "$p" 2>/dev/null
+  done
+fi
+HOOKX
+fi
+
 chmod 755 "$HOOK"
 ls -la "$HOOK"
 log_ok "Boot hook installed. Will run on next reboot. Also applying once now..."
